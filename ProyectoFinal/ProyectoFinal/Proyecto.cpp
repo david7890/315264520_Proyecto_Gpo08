@@ -31,6 +31,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 void animacion();
+void animDino();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -131,9 +132,9 @@ void interpolation(void)
 	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
 
 }
-
-
-
+//anim dino mar
+bool animDinoMar = true;
+float rotAleta = 0.0;
 
 int main()
 {
@@ -208,8 +209,16 @@ int main()
 	Model Palmera((char*)"Models/Palm/palm1.obj");
 	Model tv((char*)"Models/tv/tv.obj");
 	Model lamp((char*)"Models/lamps/lamp2.obj");
+	Model casaP((char*)"Models/Casa/casaPedro.obj");
+	//modelo dinosaur dorrie
+	Model cuerpoD((char*)"Models/dorrie/cuerpo.obj");
+	Model cola((char*)"Models/dorrie/cola.obj");
+	Model pataDelDer((char*)"Models/dorrie/pataDelanteDer.obj");
+	Model pataDelIzq((char*)"Models/dorrie/pataDelanteIzq.obj");
+	Model PataTrasDer((char*)"Models/dorrie/pataAtrasDel.obj");
+	Model pataTrasIzq((char*)"Models/dorrie/pataAtrasIzq.obj");
 	//Objeto traslucido
-	Model objTras("Models/Cubo/Cube01.obj");
+	//Model objTras("Models/Cubo/Cube01.obj");
 
 	// Build and compile our shader program
 
@@ -421,7 +430,7 @@ int main()
 		glfwPollEvents();
 		DoMovement();
 		animacion();
-
+		animDino();
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -606,7 +615,12 @@ int main()
 		model = glm::translate(model, glm::vec3(-50.0, 1.0, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Pedro.Draw(lightingShader);
-
+		//casa
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-65.0, 0.0, -30.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		casaP.Draw(lightingShader);
 		//carro
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -627,18 +641,56 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Palmera.Draw(lightingShader);
 		//television 
+		float rota = 180.0;
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(-50.0, 1.0, 12.50));
-		//model = glm::rotate()
+
+		model = glm::rotate(model, glm::radians(rota), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		tv.Draw(lightingShader);
 		//lampara
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(-47.0, 1.0, 12.50));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		lamp.Draw(lightingShader);
+		//dinosaur dorrie pivota por ahora en cenro del cuerpo 
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-80.0, 1.0, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		cuerpoD.Draw(lightingShader);
+		//cola rotar en y
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-80.0, 1.0, 0.0));
+		//model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		cola.Draw(lightingShader);
+		//aletas rotar
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-80.0, 1.0, 0.0));
+		//model = glm::rotate(model, glm::radians(60.0f), glm::vec3(1.0f, 0.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pataDelDer.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-80.0, 1.0, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pataDelIzq.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-80.0, 1.0, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PataTrasDer.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-80.0, 1.0, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pataTrasIzq.Draw(lightingShader);
 		//Traslucidez
 
 		glEnable(GL_BLEND);
@@ -648,7 +700,7 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		objTras.Draw(lightingShader);
+		//objTras.Draw(lightingShader);
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glBindVertexArray(0);
@@ -756,6 +808,12 @@ void animacion()
 
 			i_curr_steps++;
 		}
+
+	}
+}
+
+void animDino() {
+	if (animDinoMar) {
 
 	}
 }
