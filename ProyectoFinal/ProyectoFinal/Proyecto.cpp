@@ -34,6 +34,9 @@ void animacion();
 void animDino();
 void DinoCirculo();
 void animPedro();
+void caminaPedro();
+void animClock();
+void vueloPtero();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -135,6 +138,7 @@ void interpolation(void)
 
 }
 //anim dino mar
+bool animDinoRec = false;
 bool animCola = true;
 bool animCola2 = false;
 bool animaAleta = true;
@@ -157,8 +161,56 @@ float rotPieDer = 20.0;
 float phiDino = 0.0;
 float circx = 0.0;
 float circz = 0.0;
+float pospteroZ = 0.0;
+float pospteroY = 0.0;
+float theta = 90.0f;
+float ivel = 0.5;
 float radioD = 10.0;
+float radioP = 38;
 float rotCirculo = 0.0;
+float movPedroX = 0.0;
+float movPedroZ = 0.0;
+float rotPedro = 0.0;
+
+float rotManec1 = 0.0;
+float rotManec2 = 0.0;
+float rotpend = 0.0;
+float rotpuertader = -120;
+float rotpuertaIzq = 120;
+float movBirdZ = -1.6;
+float movAlaZ = -1.85;
+float rotAlas = 0.0;
+float rotAlasIzq = 0.0;
+float rotAlaPtero = 0.0;
+float rotAlaPteroIzq = 0.0;
+float rotAlaPteroDerY = 0.0;
+float rotAlaPteroIzqY = 0.0;
+float rotPtero = 0.0;
+bool movpend = true;
+bool movpend2 = false;
+bool movpuertad = true;
+bool movpuertad2 = false;
+bool movbird = false;
+bool movbird2 = false;
+bool movAlas = false;
+bool movAlas2 = false;
+bool movpuertaIzq = true;
+bool movpuertaIzq2 = false;
+bool animPuerta = false;
+bool animVuela = false;
+bool animVuela2 = false;
+bool animVuela3 = false;
+bool animVuela4 = false;
+bool animAlasPtero = true;
+bool animAlasPtero2 = false;
+bool recop1 = false;
+bool recop2 = false;
+bool recop3 = false;
+bool recop4 = false;
+
+
+glm::vec3 PosIniPedro(-15, 1.0, 0.0);
+glm::vec3 posIniPtero(-110, 1, -10);
 
 int main()
 {
@@ -238,6 +290,7 @@ int main()
 	Model tv((char*)"Models/tv/tv.obj");
 	Model lamp((char*)"Models/lamps/lamp2.obj");
 	Model casaP((char*)"Models/Casa/casafinal.obj");
+	Model pisoG((char*)"Models/Casa/piso.obj");
 	//modelo dinosaur dorrie
 	Model cuerpoD((char*)"Models/dorrie/cuerpo.obj");
 	Model cola((char*)"Models/dorrie/cola.obj");
@@ -245,6 +298,21 @@ int main()
 	Model pataDelIzq((char*)"Models/dorrie/pataDelanteIzq.obj");
 	Model PataTrasDer((char*)"Models/dorrie/pataAtrasDel.obj");
 	Model pataTrasIzq((char*)"Models/dorrie/pataAtrasIzq.obj");
+	//model cucu clock
+	Model clockC((char*)"Models/clock/clock.obj");
+	Model manec1((char*)"Models/clock/manecilla1.obj");
+	Model manec2((char*)"Models/clock/manecilla2.obj");
+	Model pendulo((char*)"Models/clock/pendulo.obj");
+	Model bird((char*)"Models/clock/bird.obj");
+	Model alaDer((char*)"Models/clock/alaDer.obj");
+	Model alaIzq((char*)"Models/clock/alaIzq.obj");
+	Model puertaDer((char*)"Models/clock/puertaDer.obj");
+	Model puertaIzq((char*)"Models/clock/puertaIzq.obj");
+	//pterodactyl
+	Model ptero((char*)"Models/ptero/ptero.obj");
+	Model pteroder((char*)"Models/ptero/pteroder.obj");
+	Model pteroIzq((char*)"Models/ptero/pteroIzq.obj");
+
 	//Objeto traslucido
 	//Model objTras("Models/Cubo/Cube01.obj");
 
@@ -461,6 +529,9 @@ int main()
 		animDino();
 		DinoCirculo();
 		animPedro();
+		caminaPedro();
+		animClock();
+		vueloPtero();
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -565,104 +636,108 @@ int main()
 		glm::mat4 tmp = glm::mat4(1.0f); //Temp
 		glm::mat4 modelTemp = glm::mat4(1.0f); //model temp 
 
-		//Carga de modelo 
-		//Personaje torso
-		view = camera.GetViewMatrix();
+		//Carga de modelo
 		glm::mat4 model(1);
-		model = glm::translate(model, glm::vec3(0, 1, 0));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rotCirculo), glm::vec3(0.0f, 1.0f, 0.0));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Torso.Draw(lightingShader);
-
-		//Pierna Izq
-		view = camera.GetViewMatrix();
-		model = glm::translate(tmp, glm::vec3(-0.5f, 0.0f, -0.1f));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::rotate(model, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		PiernaDer.Draw(lightingShader);
-		//	Pie Izq
-		view = camera.GetViewMatrix();
-		model = glm::translate(model, glm::vec3(0, -0.9f, -0.2f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BotaDer.Draw(lightingShader);
-
-		//Pierna Der
-		view = camera.GetViewMatrix();
-		model = glm::translate(tmp, glm::vec3(0.5f, 0.0f, -0.1f));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-
-		PiernaIzq.Draw(lightingShader);
-		//Pie Der
-		view = camera.GetViewMatrix();
-		model = glm::translate(model, glm::vec3(0, -0.9f, -0.2f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BotaDer.Draw(lightingShader);
-
-		//Brazo derecho
+		
+		//clock
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(-0.75f, 2.5f, 0));
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BrazoDer.Draw(lightingShader);
-
-		//	Brazo Izquierdo
+		clockC.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.75f, 2.5f, 0));
+		//manecillas
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(-0.03, 8.174, 1.721));
+		model = glm::rotate(model, glm::radians(rotManec1), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BrazoIzq.Draw(lightingShader);
-
-		//Cabeza
+		manec1.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0));
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(-0.03, 8.174, 1.72));
+		model = glm::rotate(model, glm::radians(rotManec2), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		Cabeza.Draw(lightingShader);
+		manec2.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(-0.056, 4.05, 1.025));
+		model = glm::rotate(model, glm::radians(rotpend), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pendulo.Draw(lightingShader);
+		//pajaro reloj
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(0.01, 5.208, 2.495));
+		model = glm::translate(model, glm::vec3(0, 0, movBirdZ));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		bird.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(0.25, 5.75, 4.1));
+		model = glm::translate(model, glm::vec3(0, 0, movAlaZ));
+		model = glm::rotate(model, glm::radians(rotAlas), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		alaDer.Draw(lightingShader);
+		//ala izq
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(-0.190, 5.75, 4.0));
+		model = glm::translate(model, glm::vec3(0, 0, movAlaZ));
+		model = glm::rotate(model, glm::radians(rotAlasIzq), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		alaIzq.Draw(lightingShader);
+		//puerta der clock
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(0.485, 6.406, 2.688));
+		model = glm::rotate(model, glm::radians(rotpuertader), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		puertaDer.Draw(lightingShader);
+		//puertaizq
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-69.5, 0, -46));
+		model = glm::translate(model, glm::vec3(-0.506, 6.313, 2.7));
+		model = glm::rotate(model, glm::radians(rotpuertaIzq), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		puertaIzq.Draw(lightingShader);
 		//pedro model 
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(10.0, 1.0, 0.0));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PedroTorso.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(10.0, 1.0, 0.0));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
 		model = glm::translate(model, glm::vec3(0.8, 3.7, -0.281));
 		model = glm::rotate(model, glm::radians(rotbrazo), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PbrazoDer.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(10.0, 1.0, 0.0));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
 		model = glm::translate(model, glm::vec3(-0.816, 3.8, -0.383));
 		model = glm::rotate(model, glm::radians(rotbrazo), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PbrazoIzq.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(10.0, 1.0, 0.0));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
 		model = glm::translate(model, glm::vec3(-0.5, 2.127, 0.0));
 		model = glm::rotate(model, glm::radians(rotPie), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PieIzq.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(10.0, 1.0, 0.0));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
 		model = glm::translate(model, glm::vec3(0.53, 2.07, 0.0));
 		model = glm::rotate(model, glm::radians(rotPieDer), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -673,13 +748,18 @@ int main()
 		model = glm::translate(model, glm::vec3(-65.0, 0.0, -30.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		casaP.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-65.0, 0.0, -30.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pisoG.Draw(lightingShader);
 		//carro
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-65.0, 1.0, 0.0));
+		model = glm::translate(model, glm::vec3(-36.0, -1.3, -30.0));
+		model = glm::scale(model, glm::vec3(2.6f, 2.6f, 2.6f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Carro.Draw(lightingShader);
-
 		//palmera
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -692,19 +772,10 @@ int main()
 		model = glm::translate(model, glm::vec3(-58.0, 1.0, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Palmera.Draw(lightingShader);
-		//television 
-		float rota = 180.0;
-		view = camera.GetViewMatrix();
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-50.0, 1.0, 12.50));
-
-		model = glm::rotate(model, glm::radians(rota), glm::vec3(0.0f, 1.0f, 0.0));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		tv.Draw(lightingShader);
 		//lampara
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-47.0, 1.0, 12.50));
+		model = glm::translate(model, glm::vec3(-54, 0.0, -42.50));
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		lamp.Draw(lightingShader);
@@ -714,7 +785,6 @@ int main()
 		model = glm::translate(model, glm::vec3(5.0, 1.0, 0.0));
 		model = glm::translate(model, glm::vec3(circx, 1.0, circz));
 		model = glm::rotate(model, glm::radians(rotCirculo), glm::vec3(0.0f, 1.0f, 0.0f));
-
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		cuerpoD.Draw(lightingShader);
 		//cola rotar en y
@@ -759,6 +829,30 @@ int main()
 		model = glm::rotate(model, glm::radians(rotAleta), glm::vec3(1.0f, 0.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		pataTrasIzq.Draw(lightingShader);
+		//pterodactyl
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, posIniPtero + glm::vec3(0.0, pospteroY, pospteroZ));
+		model = glm::rotate(model, glm::radians(rotPtero), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		ptero.Draw(lightingShader);
+		view = camera.GetViewMatrix();
+		//alas pterodactyl
+		model = glm::mat4(1);
+		model = glm::translate(model, posIniPtero + glm::vec3(0.0, pospteroY, pospteroZ));
+		model = glm::translate(model, glm::vec3(1.117, 0.14, -1.17));
+		model = glm::rotate(model, glm::radians(rotAlaPtero), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(rotAlaPteroDerY), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pteroder.Draw(lightingShader);
+		model = glm::mat4(1);
+		model = glm::translate(model, posIniPtero + glm::vec3(0.0, pospteroY, pospteroZ));
+		model = glm::translate(model, glm::vec3(-1.226, 0.18, -1.375));
+		model = glm::rotate(model, glm::radians(rotAlaPteroIzq), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(rotAlaPteroIzqY), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pteroIzq.Draw(lightingShader);
+
 		//Traslucidez
 
 		glEnable(GL_BLEND);
@@ -882,16 +976,16 @@ void animacion()
 }
 
 void animDino() {
-	if (animaAleta) {
-		if (rotAleta < 20.0) {
-			rotAleta += 0.1;
+	if (animDinoRec) {
+		if (animaAleta) {
+			if (rotAleta < 20.0) {
+				rotAleta += 0.1;
+			}
+			else {
+				animaAleta = false;
+				animaAleta2 = true;
+			}
 		}
-		else {
-			animaAleta = false;
-			animaAleta2 = true;
-		}
-	}
-	else {
 		if (animaAleta2) {
 			if (rotAleta > 0.0) {
 				rotAleta -= 0.1;
@@ -901,19 +995,17 @@ void animDino() {
 				animaAleta = true;
 			}
 		}
-	}
 
-	if (animAletaDer) {
-		//std::cout << rotAletaDer << std::endl;
-		if (rotAletaDer < 360.0) {
-			rotAletaDer += 0.1;
+		if (animAletaDer) {
+			//std::cout << rotAletaDer << std::endl;
+			if (rotAletaDer < 360.0) {
+				rotAletaDer += 0.1;
+			}
+			else {
+				animAletaDer = false;
+				animAletaDer2 = true;
+			}
 		}
-		else {
-			animAletaDer = false;
-			animAletaDer2 = true;
-		}
-	}
-	else {
 		if (animAletaDer2) {
 			//std::cout << rotAletaDer << std::endl;
 			if (rotAletaDer > 340.0) {
@@ -924,19 +1016,17 @@ void animDino() {
 				animAletaDer = true;
 			}
 		}
-	}
 
-	if (animCola) {
-		
-		if (rotCola < 15.0) {
-			rotCola += 0.1;
+		if (animCola) {
+
+			if (rotCola < 15.0) {
+				rotCola += 0.1;
+			}
+			else {
+				animCola = false;
+				animCola2 = true;
+			}
 		}
-		else {
-			animCola = false;
-			animCola2 = true;
-		}
-	}
-	else {
 		if (animCola2) {
 			if (rotCola > -15.0) {
 				rotCola -= 0.1;
@@ -950,18 +1040,20 @@ void animDino() {
 }
 
 void DinoCirculo() {
-	float speed = 0.5;
-	float phi = phiDino + (2*speed) * glfwGetTime();
-	circx = radioD * cos(phiDino - speed * glfwGetTime());
-	circz = radioD * sin(phiDino - speed * glfwGetTime());
-	std::cout << rotCirculo << std::endl;
-	rotCirculo = phi;
+	if (animDinoRec) {
+		float speed = 0.5;
+		float phi = phiDino + (2 * speed) * glfwGetTime();
+		circx = radioD * cos(phiDino - speed * glfwGetTime());
+		circz = radioD * sin(phiDino - speed * glfwGetTime());
+		//std::cout << rotCirculo << std::endl;
+		rotCirculo = phi;
+	}
 }
 
 void animPedro() {
 	if (animBrazo) {
 		if (rotbrazo < 20.0) {
-			rotbrazo += 0.1;
+			rotbrazo += 0.2;
 		}
 		else {
 			animBrazo = false;
@@ -971,7 +1063,7 @@ void animPedro() {
 	else {
 		if (animBrazo2) {
 			if (rotbrazo > -15.0) {
-				rotbrazo -= 0.1;
+				rotbrazo -= 0.2;
 			}
 			else {
 				animBrazo2 = false;
@@ -982,7 +1074,7 @@ void animPedro() {
 	}
 	if (animPie) {
 		if (rotPie < 20) {
-			rotPie += 0.1;
+			rotPie += 0.2;
 		}
 		else {
 			animPie = false;
@@ -992,7 +1084,7 @@ void animPedro() {
 	else {
 		if (animPie2) {
 			if (rotPie > -30) {
-				rotPie -= 0.1;
+				rotPie -= 0.2;
 			}
 			else {
 				animPie = true;
@@ -1003,7 +1095,7 @@ void animPedro() {
 
 	if (animPieDer) {
 		if (rotPieDer < 20) {
-			rotPieDer += 0.1;
+			rotPieDer += 0.2;
 		}
 		else {
 			animPieDer = false;
@@ -1013,7 +1105,7 @@ void animPedro() {
 	else {
 		if (animPieDer2) {
 			if (rotPieDer > -30) {
-				rotPieDer -= 0.1;
+				rotPieDer -= 0.2;
 			}
 			else {
 				animPieDer = true;
@@ -1021,9 +1113,181 @@ void animPedro() {
 			}
 		}
 	}
-
 }
 
+void caminaPedro() {
+	if (recop1) {
+		movPedroZ += 0.02f;
+		if (movPedroZ > 20) {
+			recop1 = false;
+			recop2 = true;
+		}
+	}
+	if (recop2) {
+		movPedroZ -= 0.02f;
+		if (movPedroZ < -25) {
+			recop2 = false;
+			recop1 = true;
+		}
+	}
+	if (recop3) {
+		cout << "3 posicion x:" << movPedroX << "z:´" << movPedroZ << "\n";	
+		rotPedro = 90;
+		movPedroX += 0.02f;
+		if (movPedroX > 10) {
+			recop3 = false;
+			recop4 = true;
+		}
+	}
+	if (recop4) {
+		cout << "4 posicion x:" << movPedroX << "z:´" << movPedroZ << "\n";
+		rotPedro = 180;
+		movPedroZ -= 0.02f;
+		if (movPedroZ < 0) {
+			recop4 = false;
+			recop1 = true;
+		}
+	}
+}
+
+void animClock() {
+	rotManec1 += 0.4;
+	rotManec2 += 0.2;
+	if (movpend) {
+		if (rotpend > -50) {
+			rotpend -= 0.2;
+		}
+		else {
+			movpend = false;
+			movpend2 = true;
+		}
+	}
+	else {
+		if (movpend2) {
+			if (rotpend < 30) {
+				rotpend += 0.2;
+			}
+			else {
+				movpend = true;
+				movpend2 = false;
+			}
+		}
+	}
+
+	if (animPuerta) {
+		if (movpuertad) {
+			//abrir puerta
+			rotpuertader += 0.2;
+			rotpuertaIzq -= 0.2;
+			if (rotpuertader > 0) {
+				//puerta abierta
+				movbird = true;
+				movpuertad = false;
+			}
+		}
+		if (movpuertad2) {
+			//cerrar puerta
+			rotpuertader -= 0.2;
+			rotpuertaIzq += 0.2;
+			if (rotpuertader < -120) {
+				movpuertad = true;
+				movpuertad2 = false;
+			}
+		}
+		if (movbird) {
+			//sacar pajaro
+			movBirdZ += 0.01f;
+			movAlaZ += 0.01f;
+			if (movBirdZ > 0.2) {
+				//mover alas
+				movbird = false;
+				movAlas = true;
+			}
+		}
+
+		if (movAlas) {
+			rotAlas += 0.2;
+			rotAlasIzq -= 0.2;
+			if (rotAlas > 60) {
+				movAlas = false;
+				movAlas2 = true;
+			}
+		}
+
+		if (movAlas2) {
+			rotAlas -= 0.2;
+			rotAlasIzq += 0.2;
+			if (rotAlas < 0) {
+				movAlas2 = false;
+				movbird2 = true;
+			}
+		}
+
+		if (movbird2) {
+			//meter pajaro
+			movBirdZ -= 0.01;
+			movAlaZ -= 0.01;
+			if (movBirdZ < -1.6) {
+				movbird2 = false;
+				movpuertad2 = true;
+			}
+		}
+	}
+}
+
+void vueloPtero() {
+	
+	if (animVuela) {
+		pospteroZ = radioP * cos(theta - (ivel * glfwGetTime()));
+		pospteroY = radioP * sin(theta - (ivel * glfwGetTime()));
+		float posY = posIniPtero.y + pospteroY;
+		float posZ = posIniPtero.z + pospteroZ;
+		std::cout << "pos z: " << posZ << std::endl;
+		std::cout << "pos y: " << posY << std::endl;
+
+		if (posY < 1 && posZ > 27.9 ) {
+			animVuela = false;
+			animVuela2 = true;
+		}
+
+	}
+
+	if (animVuela2) {
+		//rotar cuerpo y alas
+		rotPtero += 0.3;
+		rotAlaPteroDerY += 0.3;
+		rotAlaPteroIzqY += 0.3;
+		if (rotPtero > 180) {
+			animVuela2 = false;
+			animVuela3 = false;
+		}
+	}
+
+	if (animVuela3) {
+		theta = -90.0f;
+		pospteroZ = radioP * cos(theta - (ivel * glfwGetTime()));
+		pospteroY = radioP * sin(theta - (ivel * glfwGetTime()));
+
+	}
+
+	if (animAlasPtero) {
+		rotAlaPtero += 0.1;
+		rotAlaPteroIzq -= 0.1;
+		if (rotAlaPtero > 40) {
+			animAlasPtero = false;
+			animAlasPtero2 = true;
+		}
+	}
+
+	if (animAlasPtero2) {
+		rotAlaPtero -= 0.1;
+		rotAlaPteroIzq += 0.1;
+		if (rotAlaPtero < -30) {
+			animAlasPtero = true;
+			animAlasPtero2 = false;
+		}
+	}
+}
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -1153,9 +1417,18 @@ void DoMovement()
 		posX += 1;
 	}
 
-
-
-
+	if (keys[GLFW_KEY_I]) {
+		animPuerta = true;
+	}
+	if (keys[GLFW_KEY_O]) {
+		animDinoRec = true;
+	}
+	if (keys[GLFW_KEY_P]) {
+		recop1 = true;
+	}
+	if (keys[GLFW_KEY_E]) {
+		animVuela = true;
+	}
 	// Camera controls
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
 	{
