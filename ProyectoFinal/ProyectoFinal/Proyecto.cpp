@@ -37,6 +37,7 @@ void animPedro();
 void caminaPedro();
 void animClock();
 void vueloPtero();
+void animCar();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -186,6 +187,9 @@ float rotAlaPteroIzq = 0.0;
 float rotAlaPteroDerY = 0.0;
 float rotAlaPteroIzqY = 0.0;
 float rotPtero = 0.0;
+float movcarX = 0.0;
+float movcarZ = 0.0;
+float rotcar = 0.0;
 bool movpend = true;
 bool movpend2 = false;
 bool movpuertad = true;
@@ -203,6 +207,15 @@ bool animVuela3 = false;
 bool animVuela4 = false;
 bool animAlasPtero = true;
 bool animAlasPtero2 = false;
+bool movcar = false;
+bool pathcar1 = true;
+bool pathcar2 = false;
+bool pathcar3 = false;
+bool pathcar4 = false;
+bool rotcar1 = false;
+bool rotcar2 = false;
+bool rotcar3 = false;
+bool rotcar4 = false;
 bool recop1 = false;
 bool recop2 = false;
 bool recop3 = false;
@@ -211,7 +224,7 @@ bool recop4 = false;
 
 glm::vec3 PosIniPedro(-15, 1.0, 0.0);
 glm::vec3 posIniPtero(-110, 1, -10);
-
+glm::vec3 posIniCar(-20, -1.3, 25);
 int main()
 {
 	// Init GLFW
@@ -228,7 +241,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 12", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Proyecto final", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -272,13 +285,6 @@ int main()
 	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 
-	Model BotaDer((char*)"Models/Personaje/bota.obj");
-	Model PiernaDer((char*)"Models/Personaje/piernader.obj");
-	Model PiernaIzq((char*)"Models/Personaje/piernaizq.obj");
-	Model Torso((char*)"Models/Personaje/torso.obj");
-	Model BrazoDer((char*)"Models/Personaje/brazoder.obj");
-	Model BrazoIzq((char*)"Models/Personaje/brazoizq.obj");
-	Model Cabeza((char*)"Models/Personaje/cabeza.obj");
 	//personaje pedro
 	Model PedroTorso((char*)"Models/Pedro/cuerpo.obj");
 	Model PbrazoIzq((char*)"Models/Pedro/brazoIzq.obj");
@@ -291,6 +297,8 @@ int main()
 	Model lamp((char*)"Models/lamps/lamp2.obj");
 	Model casaP((char*)"Models/Casa/casafinal.obj");
 	Model pisoG((char*)"Models/Casa/piso.obj");
+	Model carro2((char*)"Models/carro2/carro2.obj");
+	Model sea((char*)"Models/dorrie/Sea.obj");
 	//modelo dinosaur dorrie
 	Model cuerpoD((char*)"Models/dorrie/cuerpo.obj");
 	Model cola((char*)"Models/dorrie/cola.obj");
@@ -532,6 +540,7 @@ int main()
 		caminaPedro();
 		animClock();
 		vueloPtero();
+		animCar();
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -711,33 +720,33 @@ int main()
 		//pedro model 
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, -1.3, movPedroZ));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PedroTorso.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, -1.3, movPedroZ));
 		model = glm::translate(model, glm::vec3(0.8, 3.7, -0.281));
 		model = glm::rotate(model, glm::radians(rotbrazo), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PbrazoDer.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, -1.3, movPedroZ));
 		model = glm::translate(model, glm::vec3(-0.816, 3.8, -0.383));
 		model = glm::rotate(model, glm::radians(rotbrazo), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PbrazoIzq.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, -1.3, movPedroZ));
 		model = glm::translate(model, glm::vec3(-0.5, 2.127, 0.0));
 		model = glm::rotate(model, glm::radians(rotPie), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		PieIzq.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, 0.0, movPedroZ));
+		model = glm::translate(model, PosIniPedro + glm::vec3(movPedroX, -1.3, movPedroZ));
 		model = glm::translate(model, glm::vec3(0.53, 2.07, 0.0));
 		model = glm::rotate(model, glm::radians(rotPieDer), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -750,9 +759,18 @@ int main()
 		casaP.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-65.0, 0.0, -30.0));
+		model = glm::translate(model, glm::vec3(-85.0, 0.0, -30.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		pisoG.Draw(lightingShader);
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-85.0, 0.0, 180));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pisoG.Draw(lightingShader);
+		//sea 
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(10, -1.3, -30));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		sea.Draw(lightingShader);
 		//carro
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -763,15 +781,22 @@ int main()
 		//palmera
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-70.0, 1.0, 0.0));
+		model = glm::translate(model, glm::vec3(-73.0, -1.3, 1.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Palmera.Draw(lightingShader);
 		//palm2
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-58.0, 1.0, 0.0));
+		model = glm::translate(model, glm::vec3(-23.0, -1.3, -27));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Palmera.Draw(lightingShader);
+		//carro2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, posIniCar + glm::vec3(movcarX, 0, movcarZ));
+		model = glm::rotate(model, glm::radians(rotcar), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		carro2.Draw(lightingShader);
 		//lampara
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -1288,6 +1313,75 @@ void vueloPtero() {
 		}
 	}
 }
+
+void animCar() {
+	if (movcar) {
+		if (pathcar1) {
+			rotcar = 0.0f;
+			movcarZ += 0.03f;
+			if (movcarZ > 75) {
+				pathcar1 = false;
+				rotcar1 = true;
+			}
+		}
+
+		if (rotcar1) {
+			//rotar carro 
+			rotcar -= 0.05;
+			if (rotcar < -90) {
+				rotcar1 = false;
+				pathcar2 = true;
+			}
+		}
+
+		if (pathcar2) {
+			movcarX -= 0.03;
+			if (movcarX < -70) {
+				pathcar2 = false;
+				rotcar2 = true;
+			}
+		}
+
+		if (rotcar2) {
+			rotcar -= 0.05;
+			if (rotcar < -180) {
+				rotcar2 = false;
+				pathcar3 = true;
+			}
+		}
+
+		if (pathcar3) {
+			movcarZ -= 0.03;
+			if (movcarZ < 25) {
+				pathcar3 = false;
+				rotcar3 = true;
+			}
+		}
+		if (rotcar3) {
+			rotcar -= 0.05;
+			if (rotcar < -270) {
+				rotcar3 = false;
+				pathcar4 = true;
+			}
+		}
+		if (pathcar4) {
+			movcarX += 0.03;
+			if (movcarX > -20) {
+				pathcar4 = false;
+				rotcar4 = true;
+			}
+		}
+		if (rotcar4) {
+			rotcar -= 0.05;
+			if (rotcar < -360) {
+				rotcar4 = false;
+				pathcar1 = true;
+			}
+		}
+
+	}
+	
+}
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -1428,6 +1522,9 @@ void DoMovement()
 	}
 	if (keys[GLFW_KEY_E]) {
 		animVuela = true;
+	}
+	if (keys[GLFW_KEY_R]) {
+		movcar = true;
 	}
 	// Camera controls
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
