@@ -1,3 +1,11 @@
+newmtl Sea1:phong1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
 newmtl carroF1:lambert5SG
 illum 4
 Kd 0.00 0.00 0.00
@@ -96,6 +104,36 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd coo_coo.png
 Ni 1.00
+newmtl cuerpo:Eye
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd 673EDEF_c.png
+map_Ka 673EDEF_c.png
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 0.00
+newmtl cuerpo:Skin
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd 4598A251_c.png
+map_Ka 4598A251_c.png
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 0.00
+newmtl cuerpo:Tounge
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd 5EA7D5B7_c.png
+map_Ka 5EA7D5B7_c.png
+Ni 1.50
+Ks 0.00 0.00 0.00
+Ns 0.00
 newmtl initialShadingGroup
 illum 4
 Kd 0.50 0.50 0.50
@@ -151,6 +189,13 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd grass.jpg
 Ni 1.00
+newmtl lambert12SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 0.53 0.53 0.53
+map_Kd agua.png
+Ni 1.00
 newmtl lamp2:lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
@@ -164,6 +209,106 @@ Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd cafe.jpg
+Ni 1.00
+newmtl palm1:CubeFBXASC046001SG3
+illum 4
+Kd 0.53 0.31 0.03
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 7.61
+newmtl palm1:CubeFBXASC046001SG5
+illum 4
+Kd 0.15 0.06 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 7.61
+newmtl palm1:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd verdec.png
+Ni 1.00
+newmtl palm1:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd verdeo.png
+Ni 1.00
+newmtl palm1:lambert4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd coco.png
+Ni 1.00
+newmtl palm1:lambert5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd cafe1.png
+Ni 1.00
+newmtl palm1:lambert6SG
+illum 4
+Kd 0.06 0.06 0.06
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl palm2:CubeFBXASC046001SG3
+illum 4
+Kd 0.53 0.31 0.03
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 7.61
+newmtl palm2:CubeFBXASC046001SG5
+illum 4
+Kd 0.15 0.06 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 7.61
+newmtl palm2:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd verdec.png
+Ni 1.00
+newmtl palm2:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd verdeo.png
+Ni 1.00
+newmtl palm2:lambert4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd coco.png
+Ni 1.00
+newmtl palm2:lambert5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd cafe1.png
+Ni 1.00
+newmtl palm2:lambert6SG
+illum 4
+Kd 0.06 0.06 0.06
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
 Ni 1.00
 newmtl pasted__lambert4SG
 illum 4
@@ -206,6 +351,13 @@ Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd Flower_Pot_Texture.png
+Ni 1.00
+newmtl pasted__lambert11SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd grass.jpg
 Ni 1.00
 newmtl pasted__pasted__lambert4SG
 illum 4

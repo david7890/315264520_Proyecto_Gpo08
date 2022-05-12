@@ -138,6 +138,7 @@ void interpolation(void)
 	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
 
 }
+//variables para controlar animaciones y movimientos de los objetos
 //anim dino mar
 bool animDinoRec = false;
 bool animCola = true;
@@ -222,7 +223,7 @@ bool recop3 = false;
 bool recop4 = false;
 
 
-glm::vec3 PosIniPedro(-15, 1.0, 0.0);
+glm::vec3 PosIniPedro(-15, 0.3, 0.0);
 glm::vec3 posIniPtero(-110, 1, -10);
 glm::vec3 posIniCar(-20, -1.3, 25);
 int main()
@@ -297,7 +298,6 @@ int main()
 	Model casaP((char*)"Models/Casa/casafinal.obj");
 	Model pisoG((char*)"Models/Casa/piso.obj");
 	Model carro2((char*)"Models/carro2/carro2.obj");
-	Model sea((char*)"Models/dorrie/Sea.obj");
 	//modelo dinosaur dorrie
 	Model cuerpoD((char*)"Models/dorrie/cuerpo.obj");
 	Model cola((char*)"Models/dorrie/cola.obj");
@@ -305,6 +305,7 @@ int main()
 	Model pataDelIzq((char*)"Models/dorrie/pataDelanteIzq.obj");
 	Model PataTrasDer((char*)"Models/dorrie/pataAtrasDel.obj");
 	Model pataTrasIzq((char*)"Models/dorrie/pataAtrasIzq.obj");
+	Model sea((char*)"Models/dorrie/Sea.obj");
 	//model cucu clock
 	Model clockC((char*)"Models/clock/clock.obj");
 	Model manec1((char*)"Models/clock/manecilla1.obj");
@@ -577,7 +578,6 @@ int main()
 
 		//Carga de modelo
 		glm::mat4 model(1);
-		
 		//clock
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -689,18 +689,22 @@ int main()
 		casaP.Draw(lightingShader);
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-85.0, 0.0, -30.0));
+		model = glm::translate(model, glm::vec3(-65, 0.0, -30.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		pisoG.Draw(lightingShader);
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-85.0, 0.0, 180));
+		model = glm::translate(model, glm::vec3(-65.0, 0.0, 180));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		pisoG.Draw(lightingShader);
-
+		//sea
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(13, -0.5, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		sea.Draw(lightingShader);
 		//carro
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-36.0, -1.3, -30.0));
+		model = glm::translate(model, glm::vec3(-38.0, -1.3, -30.0));
 		model = glm::scale(model, glm::vec3(2.6f, 2.6f, 2.6f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Carro.Draw(lightingShader);
