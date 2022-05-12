@@ -51,6 +51,7 @@ in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
 in float trans;
+uniform vec4 colorAlpha;
 
 out vec4 color;
 
@@ -83,9 +84,9 @@ void main( )
     // Spot light
     result += CalcSpotLight( spotLight, norm, FragPos, viewDir );
     
-	
+    
     color = vec4( result,texture( material.diffuse, TexCoords).rgb );
-	  if(color.a < 0.1 && trans>0)
+      if(color.a < 0.1 && trans>0)
         discard;
 }
 
@@ -106,10 +107,10 @@ vec3 CalcDirLight( DirLight light, vec3 normal, vec3 viewDir )
     vec3 diffuse = light.diffuse * diff * vec3( texture( material.diffuse, TexCoords ).rgb );
     vec3 specular = light.specular * spec * vec3( texture( material.specular, TexCoords ).rgb );
     
-	/*vec4 result= vec4(ambient + diffuse + specular,texture( material.diffuse, TexCoords).a) ;
-	  if(result.a < 0.1)
+    /*vec4 result= vec4(ambient + diffuse + specular,texture( material.diffuse, TexCoords).a) ;
+      if(result.a < 0.1)
         discard;*/
-	     	vec3 result=ambient + diffuse + specular;
+            vec3 result=ambient + diffuse + specular;
 
     return (result);
 }
@@ -140,9 +141,9 @@ vec3 CalcPointLight( PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir )
     specular *= attenuation;
 
   /* vec4 result= vec4(ambient + diffuse + specular,texture( material.diffuse, TexCoords).rgb) ;
-	  if(result.a < 0.1)
+      if(result.a < 0.1)
         discard;*/
-     	vec3 result=ambient + diffuse + specular;
+        vec3 result=ambient + diffuse + specular;
 
     return (result);
     
@@ -178,11 +179,11 @@ vec3 CalcSpotLight( SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir )
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
 
-	/*	vec4 result= vec4(ambient + diffuse + specular,texture( material.diffuse, TexCoords).a) ;
-	  if(result.a < 0.1)
+    /*  vec4 result= vec4(ambient + diffuse + specular,texture( material.diffuse, TexCoords).a) ;
+      if(result.a < 0.1)
         discard;*/
 
-      	vec3 result=ambient + diffuse + specular;
+        vec3 result=ambient + diffuse + specular;
 
     return (result);
     
